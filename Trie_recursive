@@ -33,7 +33,7 @@ bool searchHelper(string s, TrieNode *root)
 {
   if(s.empty())
   {
-	return root->endOfWord;
+    return root->endOfWord;
   }
   else
   {
@@ -48,11 +48,11 @@ bool searchHelper(string s, TrieNode *root)
           char chosen = s[0];
 
           //explore
-		  if(searchHelper(s.erase(0,1), root->children[(char)i]))
-		    return true;
+          if(searchHelper(s.erase(0,1), root->children[(char)i]))
+		        return true;
 
-		  //backtrack
-		  s.insert(0,1,chosen);
+          //backtrack
+          s.insert(0,1,chosen);
         }
 
         //If any branch returns false, you move onto next character
@@ -64,10 +64,10 @@ bool searchHelper(string s, TrieNode *root)
     }
     else
     {
-	  if(root->children[c] != nullptr)
-	    return searchHelper(s.erase(0,1), root->children[c]);
-	  else
-	    return false;
+      if(root->children[c] != nullptr)
+	return searchHelper(s.erase(0,1), root->children[c]);
+      else
+        return false;
     }
   }
 }
