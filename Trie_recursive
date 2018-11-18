@@ -1,0 +1,89 @@
+//============================================================================
+// Name        : TrieMap.cpp
+// Author      : pradosh
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Trie Insert and Search Recursively
+//============================================================================
+
+#include <iostream>
+#include <stdio.h>
+#include <vector>
+#include <string>
+#include <iostream>
+#include <bits/stdc++.h>
+
+using namespace std;
+
+
+struct TrieNode
+{
+  bool endOfWord;
+  unordered_map<char, TrieNode*> children;
+};
+
+TrieNode * createNode(void)
+{
+  TrieNode *new_node = new TrieNode;
+  new_node->endOfWord = false;
+  return new_node;
+}
+
+bool searchHelper(string s, TrieNode *root)
+{
+  if(s.empty())
+  {
+	return root->endOfWord;
+  }
+  else
+  {
+	char c = s[0];
+	if(root->children[c] != nullptr)
+		return searchHelper(s.erase(0,1), root->children[c]);
+	else
+		return false;
+  }
+}
+
+/*-----------------------------------------------------
+ Recursively add a string
+ ----------------------------------------------------*/
+void insertinTrie(string s, TrieNode *root)
+{
+  if( s.empty())
+  {
+	root->endOfWord = true;
+  }
+  else
+  {
+    char c = s[0];
+    root->children[c] = createNode();
+    string leftover = s.erase(0,1);
+    insertinTrie(leftover , root->children[c]);
+  }
+  return;
+}
+
+void trieHelper(vector<string> &s, TrieNode * root)
+{
+  for(int i = 0; i < s.size(); i ++)
+  {
+	 cout << "Inserting word " << s[i] << " in dictionary " << endl;
+    insertinTrie(s[i], root);
+  }
+}
+
+int main() {
+  TrieNode* root = createNode();
+  vector<string> s = {"abcd", "abc", "lmno"};
+  trieHelper(s, root);
+
+  //Search
+  vector<string> to_find = {"jkil", "abce", "abc","lmno" };
+  for(int i = 0; i < to_find.size(); i++)
+  {
+	cout << "searching for " << to_find[i] << " found ? " <<   searchHelper(to_find[i], root) << endl;
+  }
+
+  return 0;
+}
