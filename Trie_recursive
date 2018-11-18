@@ -37,11 +37,38 @@ bool searchHelper(string s, TrieNode *root)
   }
   else
   {
-	char c = s[0];
-	if(root->children[c] != nullptr)
-		return searchHelper(s.erase(0,1), root->children[c]);
-	else
-		return false;
+    char c = s[0];
+    if(c == '.')
+    {
+      for(int i = 97; i < 123; i++)
+      {
+        if(root->children[(char)i] != nullptr)
+        {
+          //choose
+          char chosen = s[0];
+
+          //explore
+		  if(searchHelper(s.erase(0,1), root->children[(char)i]))
+		    return true;
+
+		  //backtrack
+		  s.insert(0,1,chosen);
+        }
+
+        //If any branch returns false, you move onto next character
+        //Only return true if any brach returns true
+      }
+
+      //if nothing is there return false
+      return false;
+    }
+    else
+    {
+	  if(root->children[c] != nullptr)
+	    return searchHelper(s.erase(0,1), root->children[c]);
+	  else
+	    return false;
+    }
   }
 }
 
@@ -57,7 +84,10 @@ void insertinTrie(string s, TrieNode *root)
   else
   {
     char c = s[0];
-    root->children[c] = createNode();
+    //only create an entry if it doesnt exist
+    if(root->children[c] == nullptr)
+      root->children[c] = createNode();
+
     string leftover = s.erase(0,1);
     insertinTrie(leftover , root->children[c]);
   }
@@ -68,18 +98,18 @@ void trieHelper(vector<string> &s, TrieNode * root)
 {
   for(int i = 0; i < s.size(); i ++)
   {
-	 cout << "Inserting word " << s[i] << " in dictionary " << endl;
+    cout << "Inserting word " << s[i] << " in dictionary " << endl;
     insertinTrie(s[i], root);
   }
 }
 
 int main() {
   TrieNode* root = createNode();
-  vector<string> s = {"abcd", "abc", "lmno"};
+  vector<string> s = {"a","abcd", "abc", "lmno","ab","cat"};
   trieHelper(s, root);
 
   //Search
-  vector<string> to_find = {"jkil", "abce", "abc","lmno" };
+  vector<string> to_find = {"a.", "ab", ".a", ".b", "ab.",".at",".cat","..cat", ".", "..","..cd","abc." ,"a","....","....."};
   for(int i = 0; i < to_find.size(); i++)
   {
 	cout << "searching for " << to_find[i] << " found ? " <<   searchHelper(to_find[i], root) << endl;
